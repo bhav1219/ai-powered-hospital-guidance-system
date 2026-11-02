@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MedGuide AI</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com"
+          crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            font-family: "Inter", sans-serif;
+            background: #050b14;
+            color: white;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* =========================
+           BACKGROUND
+        ========================= */
+
+        body::before {
+            content: "";
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            left: -200px;
+            top: 100px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(14, 165, 233, 0.20),
+                    transparent 65%
+                );
+
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            right: -250px;
+            bottom: -200px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(124, 58, 237, 0.20),
+                    transparent 65%
+                );
+
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            width: 100%;
+            padding: 24px 55px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            position: relative;
+            z-index: 5;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.07);
+        }
+
+        /* LOGO */
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+            object-fit: cover;
+
+            border:
+                2px solid rgba(255,255,255,0.7);
+        }
+
+        .brand-name {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-name span {
+            color: #38bdf8;
+        }
+
+        /* BACK BUTTON */
+
+        .back-btn {
+            text-decoration: none;
+            color: #cbd5e1;
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            background:
+                rgba(255,255,255,0.05);
+
+            padding: 10px 17px;
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            transition: 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: white;
+
+            border-color:
+                rgba(56,189,248,0.5);
+
+            background:
+                rgba(56,189,248,0.08);
+
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            position: relative;
+            z-index: 2;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding:
+                75px 25px 50px;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 15px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(56,189,248,0.07);
+
+            border:
+                1px solid rgba(56,189,248,0.25);
+
+            color: #b9e9ff;
+
+            font-size: 11px;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 20px;
+        }
+
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #38bdf8;
+
+            box-shadow:
+                0 0 12px #38bdf8;
+        }
+
+        .hero h1 {
+            font-size:
+                clamp(38px, 5vw, 62px);
+
+            line-height: 1.1;
+
+            letter-spacing: -2.5px;
+
+            font-weight: 600;
+        }
+
+        .hero h1 span {
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff,
+                    #38bdf8
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            max-width: 650px;
+
+            margin:
+                18px auto 0;
+
+            color: #94a3b8;
+
+            line-height: 1.7;
+
+            font-size: 15px;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 22px;
+        }
+
+        .card {
+            position: relative;
+
+            padding: 32px 27px;
+
+            min-height: 340px;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.09),
+                    rgba(255,255,255,0.035)
+                );
+
+            border:
+                1px solid rgba(255,255,255,0.10);
+
+            backdrop-filter: blur(18px);
+
+            -webkit-backdrop-filter: blur(18px);
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            text-align: center;
+
+            overflow: hidden;
+
+            transition:
+                transform 0.35s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+        /* CARD GLOW */
+
+        .card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            top: -90px;
+            right: -70px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(56,189,248,0.20),
+                    transparent 70%
+                );
+
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform:
+                translateY(-10px);
+
+            border-color:
+                rgba(56,189,248,0.40);
+
+            box-shadow:
+                0 20px 50px
+                rgba(0,0,0,0.35),
+
+                0 0 35px
+                rgba(56,189,248,0.08);
+        }
+
+        /* =========================
+           ICON
+        ========================= */
+
+        .icon-box {
+            width: 75px;
+            height: 75px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(56,189,248,0.18),
+                    rgba(124,58,237,0.13)
+                );
+
+            border:
+                1px solid rgba(56,189,248,0.20);
+
+            font-size: 34px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,0.20);
+        }
+
+        /* =========================
+           CARD CONTENT
+        ========================= */
+
+        .card h2 {
+            font-size: 20px;
+
+            font-weight: 600;
+
+            margin-bottom: 12px;
+
+            color: #f8fafc;
+        }
+
+        .card p {
+            color: #94a3b8;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+
+            min-height: 72px;
+
+            margin-bottom: 25px;
+        }
+
+        /* =========================
+           CARD BUTTON
+        ========================= */
+
+        .card a {
+            margin-top: auto;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-width: 195px;
+
+            height: 48px;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #64748b,
+                    #7c5ca8
+                );
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            box-shadow:
+                0 8px 20px
+                rgba(0,0,0,0.25);
+
+            transition: 0.3s ease;
+        }
+
+        .card a:hover {
+            transform:
+                translateY(-3px);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #718096,
+                    #8b6bb1
+                );
+
+            box-shadow:
+                0 10px 25px
+                rgba(124,92,168,0.25);
+        }
+
+        /* =========================
+           INFO SECTION
+        ========================= */
+
+        .info {
+            margin-top: 45px;
+
+            padding: 20px 25px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            background:
+                rgba(255,255,255,0.035);
+
+            text-align: center;
+
+            color: #7f8b9b;
+
+            font-size: 12px;
+        }
+
+        .info strong {
+            color: #b9e9ff;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+
+            padding:
+                10px 20px 30px;
+
+            color: #64748b;
+
+            font-size: 11px;
+        }
+
+        /* =========================
+           ANIMATION
+        ========================= */
+
+        .hero {
+            animation:
+                fadeUp 0.7s ease both;
+        }
+
+        .card:nth-child(1) {
+            animation:
+                fadeUp 0.7s 0.15s ease both;
+        }
+
+        .card:nth-child(2) {
+            animation:
+                fadeUp 0.7s 0.25s ease both;
+        }
+
+        .card:nth-child(3) {
+            animation:
+                fadeUp 0.7s 0.35s ease both;
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+        /* =====================================================
+           AI ASSISTANT
+        ===================================================== */
+
+        .ai-assistant {
+            position: fixed;
+
+            left: 25px;
+            bottom: 25px;
+
+            z-index: 9999;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* ROUND AI BUTTON */
+
+        .ai-button {
+            width: 68px;
+            height: 68px;
+
+            border-radius: 50%;
+
+            border:
+                2px solid rgba(56,189,248,0.65);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #172536,
+                    #0b1522
+                );
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+
+            font-size: 30px;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0,0,0,0.45),
+
+                0 0 20px
+                rgba(56,189,248,0.18);
+
+            animation:
+                aiRotate 7s linear infinite;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .ai-button:hover {
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,0.5),
+
+                0 0 30px
+                rgba(56,189,248,0.35);
+        }
+
+        @keyframes aiRotate {
+
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* CHAT WINDOW */
+
+        .chat-window {
+            width: 350px;
+            height: 480px;
+
+            margin-bottom: 15px;
+
+            background:
+                #111923;
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,0.55),
+
+                0 0 30px
+                rgba(56,189,248,0.08);
+
+            display: none;
+
+            flex-direction: column;
+
+            overflow: hidden;
+
+            animation:
+                chatOpen 0.25s ease;
+        }
+
+        .chat-window.show {
+            display: flex;
+        }
+
+        @keyframes chatOpen {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(15px)
+                    scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+        /* CHAT HEADER */
+
+        .chat-header {
+            padding: 16px;
+
+            background:
+                #182332;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.08);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .chat-ai-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background:
+                #0d1b2a;
+
+            border:
+                1px solid rgba(56,189,248,0.5);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 19px;
+        }
+
+        .chat-title-text strong {
+            display: block;
+
+            color: #f8fafc;
+
+            font-size: 14px;
+        }
+
+        .chat-title-text span {
+            display: block;
+
+            color: #7f8b9b;
+
+            font-size: 11px;
+
+            margin-top: 2px;
+        }
+
+        .chat-close {
+            width: 30px;
+            height: 30px;
+
+            border: none;
+
+            background:
+                transparent;
+
+            color: #94a3b8;
+
+            font-size: 20px;
+
+            cursor: pointer;
+
+            border-radius: 6px;
+        }
+
+        .chat-close:hover {
+            background:
+                rgba(255,255,255,0.08);
+
+            color: white;
+        }
+
+        /* CHAT MESSAGES */
+
+        .chat-messages {
+            flex: 1;
+
+            padding: 15px;
+
+            overflow-y: auto;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+        .chat-message {
+            max-width: 82%;
+
+            padding: 10px 13px;
+
+            border-radius: 12px;
+
+            font-size: 13px;
+
+            line-height: 1.55;
+
+            word-wrap: break-word;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+
+            background:
+                #1b2735;
+
+            color: #dbe7f2;
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+
+            background:
+                #31546a;
+
+            color: white;
+
+            border-bottom-right-radius: 4px;
+        }
+
+        .typing {
+            color: #7f8b9b;
+
+            font-style: italic;
+        }
+
+        /* CHAT INPUT */
+
+        .chat-input-area {
+            padding: 12px;
+
+            display: flex;
+
+            gap: 8px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.08);
+
+            background:
+                #0d151f;
+        }
+
+        .chat-input {
+            flex: 1;
+
+            height: 42px;
+
+            padding:
+                0 13px;
+
+            border-radius: 9px;
+
+            border:
+                1px solid #293544;
+
+            background:
+                #080f18;
+
+            color: white;
+
+            outline: none;
+
+            font-family:
+                "Inter", sans-serif;
+
+            font-size: 12px;
+        }
+
+        .chat-input:focus {
+            border-color:
+                rgba(56,189,248,0.55);
+        }
+
+        .chat-input::placeholder {
+            color: #64748b;
+        }
+
+        .chat-send {
+            width: 44px;
+            height: 42px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background:
+                #42677e;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 17px;
+
+            transition: 0.25s ease;
+        }
+
+        .chat-send:hover {
+            background:
+                #4c7892;
+
+            transform:
+                translateY(-1px);
+        }
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            header {
+                padding:
+                    20px 25px;
+            }
+
+            .main {
+                padding:
+                    55px 20px 40px;
+            }
+
+            .cards {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .card:last-child {
+                grid-column:
+                    1 / -1;
+
+                max-width: 450px;
+
+                width: 100%;
+
+                justify-self: center;
+            }
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 620px) {
+
+            header {
+                padding:
+                    16px 18px;
+            }
+
+            .brand-name {
+                font-size: 16px;
+            }
+
+            .brand img {
+                width: 37px;
+                height: 37px;
+            }
+
+            .back-btn {
+                padding:
+                    8px 12px;
+            }
+
+            .main {
+                padding:
+                    45px 17px 30px;
+            }
+
+            .hero {
+                margin-bottom: 35px;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+
+                letter-spacing:
+                    -1.5px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .card:last-child {
+                grid-column: auto;
+
+                max-width: none;
+            }
+
+            .card {
+                min-height: 315px;
+            }
+
+            /* AI CHAT MOBILE */
+
+            .ai-assistant {
+                left: 15px;
+                bottom: 15px;
+            }
+
+            .ai-button {
+                width: 60px;
+                height: 60px;
+
+                font-size: 27px;
+            }
+
+            .chat-window {
+                width:
+                    calc(100vw - 30px);
+
+                height: 450px;
+
+                margin-bottom: 12px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header>
+
+        <!-- BRAND -->
+
+        <a href="index.html"
+           class="brand">
+
+            <img
+                src="logo.png"
+                alt="MedGuide AI"
+            >
+
+            <div class="brand-name">
+
+                MedGuide <span>AI</span>
+
+            </div>
+
+        </a>
+
+        <!-- BACK -->
+
+        <a
+            href="index.html"
+            class="back-btn"
+        >
+
+            ← Home
+
+        </a>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="main">
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="badge">
+
+                <span class="badge-dot"></span>
+
+                AI-POWERED HOSPITAL GUIDANCE
+
+            </div>
+
+            <h1>
+
+                How can we
+
+                <span>help you today?</span>
+
+            </h1>
+
+            <p>
+
+                Choose an option below. MedGuide AI analyzes
+
+                your medical information and guides you to the
+
+                appropriate hospital department and location.
+
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             CARDS
+        ========================= -->
+
+        <section class="cards">
+
+            <!-- MEDICAL REPORT -->
+
+            <div class="card">
+
+                <div class="icon-box">
+
+                    📄
+
+                </div>
+
+                <h2>
+
+                    Medical Report
+
+                </h2>
+
+                <p>
+
+                    Upload your medical report and let AI
+
+                    analyze the information to recommend
+
+                    the appropriate hospital department.
+
+                </p>
+
+                <a href="report.html">
+
+                    Upload Medical Report →
+
+                </a>
+
+            </div>
+
+
+            <!-- SYMPTOMS -->
+
+            <div class="card">
+
+                <div class="icon-box">
+
+                    🩺
+
+                </div>
+
+                <h2>
+
+                    Describe Symptoms
+
+                </h2>
+
+                <p>
+
+                    Describe your symptoms using text or
+
+                    Tamil/English voice input and receive
+
+                    AI-powered department guidance.
+
+                </p>
+
+                <a href="symtoms.html">
+
+                    Describe Symptoms →
+
+                </a>
+
+            </div>
+
+
+            <!-- LAB FEES -->
+
+            <div class="card">
+
+                <div class="icon-box">
+
+                    🧪
+
+                </div>
+
+                <h2>
+
+                    Lab & Scan Fees
+
+                </h2>
+
+                <p>
+
+                    Search and view general hospital
+
+                    laboratory test and medical scanning
+
+                    fees for quick reference.
+
+                </p>
+
+                <a href="lab_fee.html">
+
+                    View Lab & Scan Fees →
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- INFO -->
+
+        <div class="info">
+
+            <strong>AI Guidance:</strong>
+
+            MedGuide AI provides recommendations only.
+
+            Doctors make the final diagnosis.
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        MedGuide AI • AI-Powered Hospital Guidance System
+
+    </footer>
+
+
+    <!-- =====================================================
+         AI ASSISTANT
+    ===================================================== -->
+
+    <div class="ai-assistant">
+
+        <!-- CHAT WINDOW -->
+
+        <div
+            class="chat-window"
+            id="chatWindow"
+        >
+
+            <!-- CHAT HEADER -->
+
+            <div class="chat-header">
+
+                <div class="chat-title">
+
+                    <div class="chat-ai-icon">
+
+                        🤖
+
+                    </div>
+
+                    <div class="chat-title-text">
+
+                        <strong>MedGuide AI Assistant</strong>
+
+                        <span>Hospital Guidance Assistant</span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="chat-close"
+                    id="chatClose"
+                    type="button"
+                >
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <!-- CHAT MESSAGES -->
+
+            <div
+                class="chat-messages"
+                id="chatMessages"
+            >
+
+                <div class="chat-message bot-message">
+
+                    Hi! 👋 I'm MedGuide AI Assistant.
+
+                    <br><br>
+
+                    You can ask me anything about the
+
+                    hospital, departments, floors,
+
+                    locations, or available tests.
+
+                </div>
+
+            </div>
+
+
+            <!-- CHAT INPUT -->
+
+            <div class="chat-input-area">
+
+                <input
+                    type="text"
+                    id="chatInput"
+                    class="chat-input"
+                    placeholder="Ask about the hospital..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="chatSend"
+                    class="chat-send"
+                    type="button"
+                >
+
+                    ➤
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ROUND AI BUTTON -->
+
+        <button
+            class="ai-button"
+            id="aiButton"
+            type="button"
+            title="Ask MedGuide AI"
+        >
+
+            🤖
+
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         AI ASSISTANT JAVASCRIPT
+    ===================================================== -->
+
+    <script>
+
+        const aiButton =
+            document.getElementById("aiButton");
+
+        const chatWindow =
+            document.getElementById("chatWindow");
+
+        const chatClose =
+            document.getElementById("chatClose");
+
+        const chatInput =
+            document.getElementById("chatInput");
+
+        const chatSend =
+            document.getElementById("chatSend");
+
+        const chatMessages =
+            document.getElementById("chatMessages");
+
+
+        /* =========================
+           OPEN CHAT
+        ========================= */
+
+        aiButton.addEventListener("click", function () {
+
+            chatWindow.classList.toggle("show");
+
+            if (chatWindow.classList.contains("show")) {
+
+                setTimeout(function () {
+
+                    chatInput.focus();
+
+                }, 200);
+
+            }
+
+        });
+
+
+        /* =========================
+           CLOSE CHAT
+        ========================= */
+
+        chatClose.addEventListener("click", function () {
+
+            chatWindow.classList.remove("show");
+
+        });
+
+
+        /* =========================
+           ADD MESSAGE
+        ========================= */
+
+        function addMessage(text, type) {
+
+            const message =
+                document.createElement("div");
+
+            message.className =
+                "chat-message " + type;
+
+            message.textContent =
+                text;
+
+            chatMessages.appendChild(message);
+
+            chatMessages.scrollTop =
+                chatMessages.scrollHeight;
+
+            return message;
+
+        }
+
+
+        /* =========================
+           SEND MESSAGE
+        ========================= */
+
+        async function sendMessage() {
+
+            const question =
+                chatInput.value.trim();
+
+            if (!question) {
+                return;
+            }
+
+
+            /* USER MESSAGE */
+
+            addMessage(
+                question,
+                "user-message"
+            );
+
+            chatInput.value = "";
+
+            chatInput.disabled = true;
+
+            chatSend.disabled = true;
+
+
+            /* TYPING MESSAGE */
+
+            const typingMessage =
+                addMessage(
+                    "MedGuide AI is thinking...",
+                    "bot-message typing"
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/hospital-chat",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                question: question
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                typingMessage.remove();
+
+
+                if (data.answer) {
+
+                    addMessage(
+                        data.answer,
+                        "bot-message"
+                    );
+
+                }
+
+                else {
+
+                    addMessage(
+                        "Sorry, I couldn't process your question.",
+                        "bot-message"
+                    );
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                typingMessage.remove();
+
+                addMessage(
+                    "Unable to connect to the hospital AI assistant.",
+                    "bot-message"
+                );
+
+            }
+
+
+            chatInput.disabled = false;
+
+            chatSend.disabled = false;
+
+            chatInput.focus();
+
+        }
+
+
+        /* =========================
+           SEND BUTTON
+        ========================= */
+
+        chatSend.addEventListener(
+            "click",
+            sendMessage
+        );
+
+
+        /* =========================
+           ENTER KEY
+        ========================= */
+
+        chatInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    sendMessage();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

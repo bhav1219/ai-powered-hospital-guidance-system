@@ -1,0 +1,36 @@
+
+floor,department_name,category
+00,RECEPTION,Facility
+00,PHARMACY,Facility
+00,RADIOLOGY,Medical Department
+00,CAFE,Facility
+00,GUEST RELATIONS,Facility
+01,PULMONOLOGY,Medical Department
+01,URGENT CARE,Medical Department
+01,PHYSIOTHERAPY & REHABILITATION,Medical Department
+01,OT COMPLEX,Operation Theatre Facility
+01,ENDOSCOPY,Medical Procedure Unit
+01,INSURANCE & ADMISSION DESK,Administrative Facility
+01,NEPHROLOGY,Medical Department
+02,UROLOGY,Medical Department
+02,DENTAL,Medical Department
+02,CARDIOLOGY,Medical Department
+03,GENERAL MEDICINE,Medical Department
+03,GENERAL & PLASTIC SURGERY,Medical Department
+03,GASTROENTEROLOGY & G.I. SURGERY,Medical Department
+03,ORTHOPAEDICS,Medical Department
+03,CTVS,Medical Department
+03,PSYCHIATRY,Medical Department
+03,GERIATRICS & PAIN CLINIC,Medical Department
+03,ENDOCRINOLOGY,Medical Department
+03,NEUROSCIENCES,Medical Department
+04,OBSTETRICS & GYNAECOLOGY,Medical Department
+04,PAEDIATRICS & NEONATOLOGY,Medical Department
+04,MASTER HEALTH CHECKUP,Medical Service
+04,ENT & DERMATOLOGY,Medical Department
+04,OPHTHALMOLOGY,Medical Department
+05,LABORATORY MEDICINE,Diagnostic Department
+05,ADMINISTRATION,Administrative Facility
+05,FOOD COURT,Facility
+05,ALTERNATIVE MEDICINE,Medical Service
+05,AUDITORIUM,Facility

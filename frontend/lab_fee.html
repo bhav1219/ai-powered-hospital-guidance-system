@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lab & Scan Fees | MedGuide AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                linear-gradient(
+                    rgba(5, 11, 20, 0.90),
+                    rgba(5, 11, 20, 0.94)
+                ),
+                url("medical.png");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f4f7fb;
+        }
+
+        /* Background overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(67, 185, 232, 0.08),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(128, 100, 201, 0.08),
+                    transparent 35%
+                );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Navbar */
+
+        .navbar {
+            width: 100%;
+            height: 72px;
+            background: rgba(11, 18, 29, 0.96);
+            border-bottom: 1px solid #293544;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-section img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: 700;
+            color: #43b9e8;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #f4f7fb;
+            background: #6d5a8d;
+            padding: 10px 20px;
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: 0.25s ease;
+        }
+
+        .back-btn:hover {
+            background: #7b67a0;
+        }
+
+        /* Main */
+
+        .container {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+            padding: 55px 0 40px;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .page-heading h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+            color: #f4f7fb;
+        }
+
+        .page-heading p {
+            color: #9ba9b9;
+            font-size: 15px;
+        }
+
+        /* Main Card */
+
+        .fee-card {
+            background: rgba(22, 29, 39, 0.96);
+            border: 1px solid #293544;
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Card Header */
+
+        .fee-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+
+            padding-bottom: 25px;
+            border-bottom: 1px solid #293544;
+        }
+
+        .fee-icon {
+            width: 62px;
+            height: 62px;
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #0d2635;
+            border: 1px solid #24516a;
+
+            font-size: 30px;
+        }
+
+        .fee-header h2 {
+            font-size: 23px;
+            margin-bottom: 6px;
+        }
+
+        .fee-header p {
+            color: #9ba9b9;
+            font-size: 14px;
+        }
+
+        /* Search */
+
+        .search-box {
+            margin: 25px 0;
+        }
+
+        .search-box input {
+            width: 100%;
+
+            padding: 15px 18px;
+
+            background: #0a111d;
+            border: 1px solid #293544;
+
+            border-radius: 10px;
+
+            color: #f4f7fb;
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.25s ease;
+        }
+
+        .search-box input::placeholder {
+            color: #718094;
+        }
+
+        .search-box input:focus {
+            border-color: #43b9e8;
+            box-shadow: 0 0 0 3px rgba(67, 185, 232, 0.08);
+        }
+
+        /* Fee List */
+
+        .fee-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            max-height: 470px;
+            overflow-y: auto;
+
+            padding-right: 8px;
+        }
+
+        .fee-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: #111923;
+            border: 1px solid #263240;
+
+            padding: 17px 20px;
+
+            border-radius: 10px;
+
+            transition: 0.2s ease;
+        }
+
+        .fee-item:hover {
+            border-color: #3d5365;
+            background: #151f2b;
+            transform: translateX(2px);
+        }
+
+        .test-name {
+            color: #e7edf4;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .fee-amount {
+            color: #43b9e8;
+            font-size: 20px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* Scrollbar */
+
+        .fee-list::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .fee-list::-webkit-scrollbar-track {
+            background: #0a111d;
+            border-radius: 10px;
+        }
+
+        .fee-list::-webkit-scrollbar-thumb {
+            background: #39495a;
+            border-radius: 10px;
+        }
+
+        .fee-list::-webkit-scrollbar-thumb:hover {
+            background: #4c6075;
+        }
+
+        /* Note */
+
+        .note {
+            margin-top: 22px;
+
+            padding: 15px 18px;
+
+            background: #101b27;
+            border-left: 3px solid #43b9e8;
+
+            border-radius: 8px;
+
+            color: #9ba9b9;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .note strong {
+            color: #dce7f0;
+        }
+
+        /* Bottom Back */
+
+        .bottom-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .bottom-btn {
+            display: inline-block;
+
+            text-decoration: none;
+
+            background: #6d5a8d;
+            color: white;
+
+            padding: 12px 26px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: 0.25s ease;
+        }
+
+        .bottom-btn:hover {
+            background: #7b67a0;
+        }
+
+        /* Footer */
+
+        footer {
+            text-align: center;
+
+            padding: 25px 10px;
+
+            color: #718094;
+            font-size: 12px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .brand {
+                font-size: 20px;
+            }
+
+            .back-btn {
+                padding: 9px 14px;
+            }
+
+            .container {
+                width: 94%;
+                padding-top: 35px;
+            }
+
+            .page-heading h1 {
+                font-size: 28px;
+            }
+
+            .fee-card {
+                padding: 20px;
+            }
+
+            .fee-header {
+                gap: 12px;
+            }
+
+            .fee-icon {
+                width: 52px;
+                height: 52px;
+                font-size: 25px;
+            }
+
+            .fee-header h2 {
+                font-size: 19px;
+            }
+
+            .fee-item {
+                padding: 15px;
+            }
+
+            .test-name {
+                font-size: 14px;
+                max-width: 65%;
+            }
+
+            .fee-amount {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .navbar {
+                height: 65px;
+            }
+
+            .logo-section img {
+                width: 35px;
+                height: 35px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .back-btn {
+                font-size: 12px;
+                padding: 8px 11px;
+            }
+
+            .page-heading h1 {
+                font-size: 25px;
+            }
+
+            .page-heading p {
+                font-size: 13px;
+            }
+
+            .fee-item {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .fee-amount {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+
+    <nav class="navbar">
+
+        <div class="logo-section">
+
+            <img src="logo.png" alt="MedGuide AI Logo">
+
+            <span class="brand">
+                MedGuide AI
+            </span>
+
+        </div>
+
+        <a href="main.html" class="back-btn">
+            ← Back
+        </a>
+
+    </nav>
+
+
+    <!-- Main Content -->
+
+    <main class="container">
+
+        <div class="page-heading">
+
+            <h1>
+                Lab & Scan Fees
+            </h1>
+
+            <p>
+                Check the approximate charges for common laboratory tests and medical scans.
+            </p>
+
+        </div>
+
+
+        <section class="fee-card">
+
+            <!-- Header -->
+
+            <div class="fee-header">
+
+                <div class="fee-icon">
+                    🧪
+                </div>
+
+                <div>
+
+                    <h2>
+                        Laboratory & Diagnostic Services
+                    </h2>
+
+                    <p>
+                        Common tests and scan charges
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Search -->
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search lab test or scan..."
+                >
+
+            </div>
+
+
+            <!-- Fee List -->
+
+            <div class="fee-list" id="feeList">
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        MRI Brain
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹5,000
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        MRI Spine
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹5,500
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        CT Scan
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹3,000
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        X-Ray
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹500
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Ultrasound Scan
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹1,000
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        ECG
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹300
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Echocardiogram
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹1,500
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Complete Blood Count (CBC)
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹400
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Blood Sugar Test
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹150
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Lipid Profile
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹500
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Liver Function Test
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹600
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Kidney Function Test
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹600
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Thyroid Profile
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹450
+                    </span>
+
+                </div>
+
+
+                <div class="fee-item">
+
+                    <span class="test-name">
+                        Urine Test
+                    </span>
+
+                    <span class="fee-amount">
+                        ₹200
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Note -->
+
+            <div class="note">
+
+                <strong>Note:</strong>
+                The displayed prices are approximate and may vary depending on
+                the hospital, test type, equipment, and other applicable charges.
+
+            </div>
+
+        </section>
+
+
+        <!-- Bottom Button -->
+
+        <div class="bottom-section">
+
+            <a href="main.html" class="bottom-btn">
+                ← Back to Hospital Guidance
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        © 2026 MedGuide AI — AI Powered Hospital Guidance System
+
+    </footer>
+
+
+    <!-- Search Script -->
+
+    <script>
+
+        const searchInput = document.getElementById("searchInput");
+        const feeItems = document.querySelectorAll(".fee-item");
+
+        searchInput.addEventListener("input", function () {
+
+            const searchText = this.value.toLowerCase().trim();
+
+            feeItems.forEach(function (item) {
+
+                const testName =
+                    item.querySelector(".test-name")
+                        .textContent
+                        .toLowerCase();
+
+                if (testName.includes(searchText)) {
+
+                    item.style.display = "flex";
+
+                } else {
+
+                    item.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>

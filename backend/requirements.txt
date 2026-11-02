@@ -1,0 +1,9 @@
+Flask
+python-dotenv
+google-generativeai
+langgraph
+pymupdf
+easyocr
+pillow
+opencv-python
+pydantic

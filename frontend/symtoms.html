@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>MedGuide AI - Symptom Analysis</title>
+
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<style>
+
+:root {
+
+    --bg-main: #050b14;
+    --bg-card: #161d27;
+    --bg-card-dark: #111923;
+    --bg-input: #0a111d;
+
+    --border: #293544;
+    --border-light: #263342;
+
+    --blue: #43b9e8;
+    --blue-dark: #167aa5;
+
+    --purple: #8064c9;
+    --purple-hover: #9275dc;
+
+    --text-main: #f4f7fb;
+    --text-secondary: #9ba9b9;
+    --text-muted: #718094;
+
+    --success: #48c7a4;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+
+    width: 100%;
+    min-height: 100%;
+
+}
+
+
+body {
+
+    font-family: "Inter", sans-serif;
+
+    background: var(--bg-main);
+
+    color: var(--text-main);
+
+    overflow-x: hidden;
+
+}
+
+
+/* =====================================================
+   VANTA BACKGROUND
+===================================================== */
+
+#vanta-bg {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+
+    height: 76px;
+
+    width: 100%;
+
+    background: rgba(5, 11, 20, 0.88);
+
+    border-bottom: 1px solid #182331;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 48px;
+
+    position: relative;
+
+    z-index: 10;
+
+    backdrop-filter: blur(8px);
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    text-decoration: none;
+
+    color: var(--text-main);
+
+}
+
+
+.brand-mark {
+
+    width: 38px;
+
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: #111923;
+
+    border: 1px solid #344454;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: var(--blue);
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+}
+
+
+.brand-name {
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.4px;
+
+}
+
+
+.brand-name span {
+
+    color: var(--blue);
+
+}
+
+
+.nav-back {
+
+    text-decoration: none;
+
+    color: #b6c2d0;
+
+    background: #111923;
+
+    border: 1px solid #293544;
+
+    padding: 9px 15px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    transition: 0.2s ease;
+
+}
+
+
+.nav-back:hover {
+
+    color: white;
+
+    background: #18222f;
+
+    border-color: #3a4a5e;
+
+}
+
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.page {
+
+    max-width: 1180px;
+
+    margin: auto;
+
+    padding: 52px 30px 60px;
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+.page-heading {
+
+    margin-bottom: 28px;
+
+}
+
+
+.page-heading h1 {
+
+    font-size: 34px;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+
+    color: var(--text-main);
+
+}
+
+
+.page-heading p {
+
+    margin-top: 9px;
+
+    font-size: 13px;
+
+    color: var(--text-secondary);
+
+    line-height: 1.7;
+
+}
+
+
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
+
+.workspace {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.55fr)
+        minmax(300px, 0.75fr);
+
+    gap: 22px;
+
+    align-items: stretch;
+
+}
+
+
+/* =====================================================
+   LEFT CARD
+===================================================== */
+
+.symptom-card {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(23, 30, 40, 0.94),
+            rgba(18, 25, 35, 0.94)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 34px;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.22);
+
+    position: relative;
+
+    overflow: hidden;
+
+    backdrop-filter: blur(5px);
+
+}
+
+
+.symptom-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 160px;
+
+    height: 160px;
+
+    right: -80px;
+
+    top: -80px;
+
+    border-radius: 50%;
+
+    background: rgba(67,185,232,0.07);
+
+    filter: blur(25px);
+
+    pointer-events: none;
+
+}
+
+
+/* =====================================================
+   CARD TITLE
+===================================================== */
+
+.card-title {
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    color: var(--text-main);
+
+    margin-bottom: 7px;
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.card-subtitle {
+
+    font-size: 12px;
+
+    color: var(--text-secondary);
+
+    line-height: 1.6;
+
+    margin-bottom: 25px;
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+/* =====================================================
+   INPUT LABEL
+===================================================== */
+
+.input-label-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+
+}
+
+
+.input-label {
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #b9c6d5;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+
+}
+
+
+.language-label {
+
+    font-size: 10px;
+
+    color: var(--text-muted);
+
+}
+
+
+/* =====================================================
+   TEXTAREA
+===================================================== */
+
+textarea {
+
+    width: 100%;
+
+    min-height: 200px;
+
+    padding: 17px;
+
+    resize: vertical;
+
+    border-radius: 9px;
+
+    border: 1px solid #344454;
+
+    background: rgba(10, 17, 29, 0.94);
+
+    color: var(--text-main);
+
+    font-family: "Inter", sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    outline: none;
+
+    transition: 0.2s ease;
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+textarea::placeholder {
+
+    color: #667587;
+
+}
+
+
+textarea:focus {
+
+    border-color: var(--blue);
+
+    background: #0c1521;
+
+    box-shadow:
+        0 0 0 3px rgba(67,185,232,0.08);
+
+}
+
+
+/* =====================================================
+   BUTTON AREA
+===================================================== */
+
+.actions {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 14px;
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+/* =====================================================
+   VOICE BUTTON
+===================================================== */
+
+.voice-button {
+
+    height: 48px;
+
+    padding: 0 20px;
+
+    border-radius: 8px;
+
+    border: 1px solid #354456;
+
+    background: #18222f;
+
+    color: #cbd6e2;
+
+    font-family: "Inter", sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    transition: 0.2s ease;
+
+}
+
+
+.voice-button:hover {
+
+    background: #202c3b;
+
+    border-color: #416078;
+
+}
+
+
+.voice-button.listening {
+
+    background: #28213d;
+
+    border-color: var(--purple);
+
+    color: #d9cef5;
+
+    box-shadow:
+        0 0 0 3px rgba(128,100,201,0.10);
+
+}
+
+
+.voice-icon {
+
+    font-size: 15px;
+
+}
+
+
+/* =====================================================
+   ANALYZE BUTTON
+===================================================== */
+
+.analyze-button {
+
+    flex: 1;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: var(--purple);
+
+    color: white;
+
+    font-family: "Inter", sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+}
+
+
+.analyze-button:hover {
+
+    background: var(--purple-hover);
+
+    box-shadow:
+        0 7px 18px rgba(128,100,201,0.20);
+
+}
+
+
+.analyze-button:disabled {
+
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+#loading {
+
+    display: none;
+
+    margin-top: 17px;
+
+    padding: 12px 15px;
+
+    border-radius: 8px;
+
+    background: #0d1c2a;
+
+    border: 1px solid #244b63;
+
+    color: #8bcce8;
+
+    font-size: 11px;
+
+    text-align: center;
+
+}
+
+
+/* =====================================================
+   RESULT
+===================================================== */
+
+.result-box {
+
+    display: none;
+
+    margin-top: 22px;
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    background: rgba(17, 25, 35, 0.96);
+
+    border: 1px solid #304052;
+
+    border-left: 3px solid var(--success);
+
+    animation: resultIn 0.3s ease;
+
+}
+
+
+.result-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid #293544;
+
+}
+
+
+.result-title {
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    color: var(--text-main);
+
+}
+
+
+.result-tag {
+
+    padding: 6px 11px;
+
+    border-radius: 6px;
+
+    background: #163d3a;
+
+    color: #73d0b6;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+}
+
+
+/* =====================================================
+   FORMATTED RESULT CONTENT
+===================================================== */
+
+.result-content {
+
+    font-size: 16px;
+
+    line-height: 1.8;
+
+    color: var(--text-secondary);
+
+}
+
+
+.result-section {
+
+    margin-bottom: 22px;
+
+}
+
+
+.result-label {
+
+    display: block;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    margin-bottom: 7px;
+
+}
+
+
+.result-value {
+
+    color: #dce6ef;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    line-height: 1.7;
+
+}
+
+
+.result-reason {
+
+    color: #dce6ef;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    line-height: 1.75;
+
+}
+
+
+.location-section {
+
+    margin-top: 10px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #293544;
+
+}
+
+
+.location-title {
+
+    color: #ffffff;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    margin-bottom: 15px;
+
+}
+
+
+.location-row {
+
+    display: flex;
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+
+}
+
+
+.location-label {
+
+    color: #ffffff;
+
+    font-weight: 800;
+
+    min-width: 82px;
+
+}
+
+
+.location-value {
+
+    color: #dce6ef;
+
+    font-weight: 500;
+
+}
+
+
+/* =====================================================
+   DISCLAIMER
+===================================================== */
+
+.disclaimer {
+
+    margin-top: 20px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #273544;
+
+    color: #68778a;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+
+}
+
+
+.disclaimer strong {
+
+    color: #9eb0c2;
+
+}
+
+
+/* =====================================================
+   RIGHT STATUS PANEL
+===================================================== */
+
+.status-panel {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(23, 30, 40, 0.94),
+            rgba(18, 25, 35, 0.94)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 30px;
+
+    min-height: 100%;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.22);
+
+    position: relative;
+
+    overflow: hidden;
+
+    backdrop-filter: blur(5px);
+
+}
+
+
+.status-panel::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+
+    height: 150px;
+
+    right: -70px;
+
+    top: -70px;
+
+    border-radius: 50%;
+
+    background: rgba(67,185,232,0.07);
+
+    filter: blur(25px);
+
+    pointer-events: none;
+
+}
+
+
+/* =====================================================
+   STATUS HEADER
+===================================================== */
+
+.status-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding-bottom: 19px;
+
+    border-bottom: 1px solid #293544;
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.status-title {
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    color: var(--text-main);
+
+}
+
+
+.status-state {
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    color: var(--text-muted);
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+
+}
+
+
+/* =====================================================
+   FLOW
+===================================================== */
+
+.flow {
+
+    margin-top: 28px;
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.flow-step {
+
+    display: flex;
+
+    position: relative;
+
+    min-height: 82px;
+
+}
+
+
+.flow-step:not(:last-child)::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 15px;
+
+    top: 31px;
+
+    height: 55px;
+
+    width: 1px;
+
+    background: #344252;
+
+}
+
+
+/* =====================================================
+   STEP CIRCLE
+===================================================== */
+
+.step-circle {
+
+    width: 31px;
+
+    height: 31px;
+
+    min-width: 31px;
+
+    border-radius: 50%;
+
+    background: #18222f;
+
+    border: 1px solid #3a4a5c;
+
+    color: #75869a;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    position: relative;
+
+    z-index: 2;
+
+    transition: 0.3s ease;
+
+}
+
+
+/* =====================================================
+   STEP CONTENT
+===================================================== */
+
+.step-content {
+
+    padding-left: 14px;
+
+    padding-top: 2px;
+
+}
+
+
+.step-title {
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #78899b;
+
+    transition: 0.3s ease;
+
+}
+
+
+.step-description {
+
+    margin-top: 5px;
+
+    color: #5f6f82;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+    transition: 0.3s ease;
+
+}
+
+
+/* =====================================================
+   ACTIVE
+===================================================== */
+
+.flow-step.active .step-circle {
+
+    background: var(--blue);
+
+    border-color: var(--blue);
+
+    color: #06111a;
+
+    box-shadow:
+        0 0 0 4px rgba(67,185,232,0.10);
+
+}
+
+
+.flow-step.active .step-title {
+
+    color: #dce9f4;
+
+}
+
+
+.flow-step.active .step-description {
+
+    color: #82aabd;
+
+}
+
+
+/* =====================================================
+   COMPLETED
+===================================================== */
+
+.flow-step.completed .step-circle {
+
+    background: #163d3a;
+
+    border-color: #3b806e;
+
+    color: #73d0b6;
+
+}
+
+
+.flow-step.completed .step-title {
+
+    color: #b9c8d7;
+
+}
+
+
+.flow-step.completed .step-description {
+
+    color: #708092;
+
+}
+
+
+/* =====================================================
+   STATUS MESSAGE
+===================================================== */
+
+.status-message {
+
+    margin-top: 10px;
+
+    padding: 13px;
+
+    border-radius: 8px;
+
+    background: rgba(17, 25, 35, 0.96);
+
+    border: 1px solid #293544;
+
+    color: #78899b;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.status-message strong {
+
+    color: #a9bfd0;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+
+    text-align: center;
+
+    margin-top: 25px;
+
+    color: #596a7e;
+
+    font-size: 10px;
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+/* =====================================================
+   ANIMATION
+===================================================== */
+
+@keyframes resultIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(7px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 850px) {
+
+    .navbar {
+
+        padding: 0 20px;
+
+    }
+
+
+    .page {
+
+        padding: 35px 18px 50px;
+
+    }
+
+
+    .workspace {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .status-panel {
+
+        min-height: auto;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .page-heading h1 {
+
+        font-size: 28px;
+
+    }
+
+
+    .symptom-card {
+
+        padding: 23px 18px;
+
+    }
+
+
+    .status-panel {
+
+        padding: 24px 20px;
+
+    }
+
+
+    .actions {
+
+        flex-direction: column;
+
+    }
+
+
+    .voice-button,
+    .analyze-button {
+
+        width: 100%;
+
+    }
+
+
+    .result-content {
+
+        font-size: 14px;
+
+    }
+
+
+    .result-label,
+    .result-value,
+    .result-reason {
+
+        font-size: 14px;
+
+    }
+
+
+    .location-row {
+
+        font-size: 14px;
+
+        flex-direction: column;
+
+        gap: 2px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     VANTA BACKGROUND
+===================================================== -->
+
+<div id="vanta-bg"></div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <a href="index.html"
+       class="brand">
+
+        <div class="brand-mark">
+            +
+        </div>
+
+        <div class="brand-name">
+            MedGuide <span>AI</span>
+        </div>
+
+    </a>
+
+
+    <a href="main.html"
+       class="nav-back">
+
+        ← Back
+
+    </a>
+
+</nav>
+
+
+
+<main class="page">
+
+
+    <div class="page-heading">
+
+        <h1>
+            Symptom Analysis
+        </h1>
+
+        <p>
+            Describe your symptoms and get guidance
+            on the appropriate hospital department.
+        </p>
+
+    </div>
+
+
+
+    <div class="workspace">
+
+
+        <section class="symptom-card">
+
+
+            <div class="card-title">
+
+                Describe your symptoms
+
+            </div>
+
+
+            <div class="card-subtitle">
+
+                Enter your symptoms in simple English
+                or Tamil.
+
+            </div>
+
+
+            <form id="symptomForm">
+
+
+                <div class="input-label-row">
+
+                    <label
+                        class="input-label"
+                        for="symptoms"
+                    >
+
+                        Symptoms
+
+                    </label>
+
+
+                    <span class="language-label">
+
+                        English
+
+                    </span>
+
+                </div>
+
+
+                <textarea
+                    id="symptoms"
+                    name="symptoms"
+                    placeholder="Example:
+
+I have fever, headache and body pain..."
+                    required
+                ></textarea>
+
+
+                <div class="actions">
+
+
+                    <button
+                        type="button"
+                        id="voiceButton"
+                        class="voice-button"
+                    >
+
+                        <span class="voice-icon">
+                            🎙
+                        </span>
+
+                        Speak Symptoms
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="analyzeButton"
+                        class="analyze-button"
+                    >
+
+                        Analyze Symptoms
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+            <div id="loading">
+
+                Please wait... processing your symptoms.
+
+            </div>
+
+
+
+            <!-- RESULT -->
+
+            <div
+                id="resultBox"
+                class="result-box"
+            >
+
+                <div class="result-header">
+
+                    <div class="result-title">
+
+                        Recommendation
+
+                    </div>
+
+
+                    <div class="result-tag">
+
+                        COMPLETED
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="resultText"
+                    class="result-content"
+                ></div>
+
+            </div>
+
+
+
+            <div class="disclaimer">
+
+                <strong>Important:</strong>
+
+                This system provides recommendations only.
+                Doctors make the final diagnosis.
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- RIGHT STATUS -->
+
+        <aside class="status-panel">
+
+
+            <div class="status-header">
+
+                <div class="status-title">
+
+                    Analysis Status
+
+                </div>
+
+
+                <div
+                    class="status-state"
+                    id="statusState"
+                >
+
+                    Waiting
+
+                </div>
+
+            </div>
+
+
+
+            <div class="flow">
+
+
+                <div
+                    class="flow-step"
+                    id="step1"
+                >
+
+                    <div class="step-circle">
+
+                        <span>
+                            01
+                        </span>
+
+                    </div>
+
+
+                    <div class="step-content">
+
+                        <div class="step-title">
+
+                            Sending Symptoms
+
+                        </div>
+
+
+                        <div class="step-description">
+
+                            Your symptoms are being
+                            sent for analysis.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="flow-step"
+                    id="step2"
+                >
+
+                    <div class="step-circle">
+
+                        <span>
+                            02
+                        </span>
+
+                    </div>
+
+
+                    <div class="step-content">
+
+                        <div class="step-title">
+
+                            Receiving Symptoms
+
+                        </div>
+
+
+                        <div class="step-description">
+
+                            Your symptom information
+                            has been received.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="flow-step"
+                    id="step3"
+                >
+
+                    <div class="step-circle">
+
+                        <span>
+                            03
+                        </span>
+
+                    </div>
+
+
+                    <div class="step-content">
+
+                        <div class="step-title">
+
+                            Analyzing Symptoms
+
+                        </div>
+
+
+                        <div class="step-description">
+
+                            Finding the appropriate
+                            hospital department.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="flow-step"
+                    id="step4"
+                >
+
+                    <div class="step-circle">
+
+                        <span>
+                            04
+                        </span>
+
+                    </div>
+
+
+                    <div class="step-content">
+
+                        <div class="step-title">
+
+                            Analyzed Completely
+
+                        </div>
+
+
+                        <div class="step-description">
+
+                            Your recommendation
+                            is ready.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div
+                class="status-message"
+                id="statusMessage"
+            >
+
+                Enter your symptoms and click
+                <strong>Analyze Symptoms</strong>
+                to begin.
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+
+
+    <div class="footer">
+
+        MedGuide AI · Hospital Department Guidance System
+
+    </div>
+
+
+</main>
+
+
+<!-- =====================================================
+     THREE.JS
+===================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+
+<!-- =====================================================
+     VANTA.NET
+===================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+
+
+<!-- =====================================================
+     VANTA INITIALIZATION
+===================================================== -->
+
+<script>
+
+VANTA.NET({
+
+    el: "#vanta-bg",
+
+    mouseControls: true,
+
+    touchControls: true,
+
+    gyroControls: false,
+
+    minHeight: 200.00,
+
+    minWidth: 200.00,
+
+    scale: 1.00,
+
+    scaleMobile: 1.00,
+
+    color: 0x43b9e8,
+
+    backgroundColor: 0x050b14,
+
+    points: 10.00,
+
+    maxDistance: 22.00,
+
+    spacing: 18.00
+
+});
+
+</script>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const form =
+    document.getElementById("symptomForm");
+
+const symptoms =
+    document.getElementById("symptoms");
+
+const analyzeButton =
+    document.getElementById("analyzeButton");
+
+const loading =
+    document.getElementById("loading");
+
+const resultBox =
+    document.getElementById("resultBox");
+
+const resultText =
+    document.getElementById("resultText");
+
+const voiceButton =
+    document.getElementById("voiceButton");
+
+const statusState =
+    document.getElementById("statusState");
+
+const statusMessage =
+    document.getElementById("statusMessage");
+
+const step1 =
+    document.getElementById("step1");
+
+const step2 =
+    document.getElementById("step2");
+
+const step3 =
+    document.getElementById("step3");
+
+const step4 =
+    document.getElementById("step4");
+
+
+/* =====================================================
+   RESET FLOW
+===================================================== */
+
+function resetFlow() {
+
+    step1.className = "flow-step";
+
+    step2.className = "flow-step";
+
+    step3.className = "flow-step";
+
+    step4.className = "flow-step";
+
+
+    statusState.textContent =
+        "Waiting";
+
+
+    statusMessage.innerHTML =
+        'Enter your symptoms and click <strong>Analyze Symptoms</strong> to begin.';
+
+}
+
+
+/* =====================================================
+   STEP 1
+===================================================== */
+
+function sendingStep() {
+
+    step1.classList.add("active");
+
+    statusState.textContent =
+        "Sending";
+
+    statusMessage.textContent =
+        "Sending your symptom information...";
+
+}
+
+
+/* =====================================================
+   STEP 2
+===================================================== */
+
+function receivingStep() {
+
+    step1.classList.remove("active");
+
+    step1.classList.add("completed");
+
+    step2.classList.add("active");
+
+    statusState.textContent =
+        "Receiving";
+
+    statusMessage.textContent =
+        "Receiving your symptom information...";
+
+}
+
+
+/* =====================================================
+   STEP 3
+===================================================== */
+
+function analyzingStep() {
+
+    step2.classList.remove("active");
+
+    step2.classList.add("completed");
+
+    step3.classList.add("active");
+
+    statusState.textContent =
+        "Analyzing";
+
+    statusMessage.textContent =
+        "Analyzing symptoms and identifying the appropriate department...";
+
+}
+
+
+/* =====================================================
+   STEP 4
+===================================================== */
+
+function completedStep() {
+
+    step3.classList.remove("active");
+
+    step3.classList.add("completed");
+
+    step4.classList.add("active");
+
+    statusState.textContent =
+        "Completed";
+
+    statusMessage.textContent =
+        "Analysis completed. Your recommendation is ready.";
+
+
+    setTimeout(function() {
+
+        step4.classList.remove("active");
+
+        step4.classList.add("completed");
+
+    }, 500);
+
+}
+
+
+/* =====================================================
+   FORMAT RESULT
+===================================================== */
+
+function formatResult(data) {
+
+    let text = data || "";
+
+
+    text = text.replace(
+        /^\s*(Recommendation|COMPLETED)\s*:?\s*/gim,
+        ""
+    );
+
+
+    let departmentMatch =
+        text.match(
+            /Recommended Department\s*:\s*(.+?)(?=\n|Reason\s*:|$)/i
+        );
+
+
+    let reasonMatch =
+        text.match(
+            /Reason\s*:\s*([\s\S]*?)(?=\n\s*-{3,}|\n\s*Hospital Location\s*:|Hospital Location\s*:|$)/i
+        );
+
+
+    let hospitalMatch =
+        text.match(
+            /Hospital Location\s*:?\s*([\s\S]*)/i
+        );
+
+
+    let department =
+        departmentMatch
+            ? departmentMatch[1].trim()
+            : "";
+
+
+    let reason =
+        reasonMatch
+            ? reasonMatch[1].trim()
+            : "";
+
+
+    let hospitalText =
+        hospitalMatch
+            ? hospitalMatch[1].trim()
+            : "";
+
+
+    let hospitalDepartmentMatch =
+        hospitalText.match(
+            /Department\s*:\s*(.+?)(?=\n|Floor\s*:|Location\s*:|$)/i
+        );
+
+
+    let floorMatch =
+        hospitalText.match(
+            /Floor\s*:\s*(.+?)(?=\n|Location\s*:|$)/i
+        );
+
+
+    let locationMatch =
+        hospitalText.match(
+            /Location\s*:\s*(.+?)(?=\n|$)/i
+        );
+
+
+    let hospitalDepartment =
+        hospitalDepartmentMatch
+            ? hospitalDepartmentMatch[1].trim()
+            : department;
+
+
+    let floor =
+        floorMatch
+            ? floorMatch[1].trim()
+            : "";
+
+
+    let location =
+        locationMatch
+            ? locationMatch[1].trim()
+            : "";
+
+
+    if (!department && !reason && !hospitalText) {
+
+        return `
+
+            <div class="result-section">
+
+                <span class="result-label">
+                    Analysis Result
+                </span>
+
+                <div class="result-value">
+                    ${escapeHTML(text)}
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="result-section">
+
+            <span class="result-label">
+                Recommended Department:
+            </span>
+
+            <div class="result-value">
+                ${escapeHTML(department)}
+            </div>
+
+        </div>
+
+
+        <div class="result-section">
+
+            <span class="result-label">
+                Reason:
+            </span>
+
+            <div class="result-reason">
+                ${escapeHTML(reason)}
+            </div>
+
+        </div>
+
+
+        <div class="location-section">
+
+            <div class="location-title">
+                Hospital Location:
+            </div>
+
+
+            <div class="location-row">
+
+                <span class="location-label">
+                    Department:
+                </span>
+
+                <span class="location-value">
+                    ${escapeHTML(hospitalDepartment)}
+                </span>
+
+            </div>
+
+
+            <div class="location-row">
+
+                <span class="location-label">
+                    Floor:
+                </span>
+
+                <span class="location-value">
+                    ${escapeHTML(floor)}
+                </span>
+
+            </div>
+
+
+            <div class="location-row">
+
+                <span class="location-label">
+                    Location:
+                </span>
+
+                <span class="location-value">
+                    ${escapeHTML(location)}
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   ANALYZE SYMPTOMS
+===================================================== */
+
+form.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const text =
+            symptoms.value.trim();
+
+
+        if (!text) {
+
+            alert(
+                "Please describe your symptoms first."
+            );
+
+            return;
+
+        }
+
+
+        resetFlow();
+
+
+        resultBox.style.display =
+            "none";
+
+
+        analyzeButton.disabled =
+            true;
+
+
+        analyzeButton.textContent =
+            "Analyzing...";
+
+
+        loading.style.display =
+            "block";
+
+
+        sendingStep();
+
+
+        await new Promise(
+            resolve =>
+                setTimeout(resolve, 500)
+        );
+
+
+        try {
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "symptoms",
+                text
+            );
+
+
+            receivingStep();
+
+
+            await new Promise(
+                resolve =>
+                    setTimeout(resolve, 500)
+            );
+
+
+            analyzingStep();
+
+
+            const response =
+                await fetch(
+                    "/analyze-symptoms",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server error: " +
+                    response.status
+                );
+
+            }
+
+
+            const data =
+                await response.text();
+
+
+            completedStep();
+
+
+            resultText.innerHTML =
+                formatResult(data);
+
+
+            resultBox.style.display =
+                "block";
+
+
+            resultBox.scrollIntoView({
+
+                behavior: "smooth",
+
+                block: "center"
+
+            });
+
+        }
+
+
+        catch(error) {
+
+            console.error(
+                "Analysis error:",
+                error
+            );
+
+
+            statusState.textContent =
+                "Error";
+
+
+            statusMessage.textContent =
+                "Unable to complete the analysis. Please try again.";
+
+
+            resultText.innerHTML = `
+
+                <div class="result-section">
+
+                    <span class="result-label">
+                        Analysis Error
+                    </span>
+
+                    <div class="result-value">
+                        Unable to connect to MedGuide AI.
+                        Please try again.
+                    </div>
+
+                </div>
+
+            `;
+
+
+            resultBox.style.display =
+                "block";
+
+        }
+
+
+        finally {
+
+            loading.style.display =
+                "none";
+
+
+            analyzeButton.disabled =
+                false;
+
+
+            analyzeButton.textContent =
+                "Analyze Symptoms";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   VOICE ASSISTANT
+   ENGLISH ONLY
+===================================================== */
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+if (!SpeechRecognition) {
+
+    voiceButton.disabled = true;
+
+    voiceButton.innerHTML =
+        '<span class="voice-icon">!</span> Voice Not Supported';
+
+    statusMessage.textContent =
+        "Voice recognition is not supported in this browser.";
+
+}
+
+
+else {
+
+    const recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        "en-IN";
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        true;
+
+
+    recognition.maxAlternatives =
+        1;
+
+
+    let isListening =
+        false;
+
+
+    recognition.onstart =
+        function() {
+
+            console.log(
+                "Voice recognition started"
+            );
+
+
+            isListening =
+                true;
+
+
+            voiceButton.classList.add(
+                "listening"
+            );
+
+
+            voiceButton.innerHTML =
+                '<span class="voice-icon">●</span> Listening...';
+
+
+            statusMessage.textContent =
+                "Listening to your symptoms...";
+
+        };
+
+
+    recognition.onresult =
+        function(event) {
+
+            console.log(
+                "Speech result received:",
+                event
+            );
+
+
+            let transcript =
+                "";
+
+
+            for (
+                let i = event.resultIndex;
+                i < event.results.length;
+                i++
+            ) {
+
+                transcript +=
+                    event.results[i][0].transcript;
+
+            }
+
+
+            transcript =
+                transcript.trim();
+
+
+            console.log(
+                "Recognized text:",
+                transcript
+            );
+
+
+            if (transcript !== "") {
+
+                symptoms.value =
+                    transcript;
+
+
+                symptoms.dispatchEvent(
+                    new Event(
+                        "input",
+                        {
+                            bubbles: true
+                        }
+                    )
+                );
+
+
+                statusMessage.textContent =
+                    "Speech converted to text.";
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        function(event) {
+
+            console.error(
+                "Speech recognition error:",
+                event.error
+            );
+
+
+            isListening =
+                false;
+
+
+            voiceButton.classList.remove(
+                "listening"
+            );
+
+
+            voiceButton.innerHTML =
+                '<span class="voice-icon">🎙</span> Speak Symptoms';
+
+
+            if (
+                event.error ===
+                "not-allowed"
+            ) {
+
+                statusMessage.textContent =
+                    "Microphone permission was denied.";
+
+                alert(
+                    "Please allow microphone permission in Chrome."
+                );
+
+            }
+
+
+            else if (
+                event.error ===
+                "no-speech"
+            ) {
+
+                statusMessage.textContent =
+                    "No speech detected. Please speak again.";
+
+            }
+
+
+            else if (
+                event.error ===
+                "audio-capture"
+            ) {
+
+                statusMessage.textContent =
+                    "Microphone was not detected.";
+
+            }
+
+
+            else if (
+                event.error ===
+                "network"
+            ) {
+
+                statusMessage.textContent =
+                    "Network error during speech recognition.";
+
+            }
+
+
+            else {
+
+                statusMessage.textContent =
+                    "Voice recognition error: " +
+                    event.error;
+
+            }
+
+        };
+
+
+    recognition.onend =
+        function() {
+
+            console.log(
+                "Voice recognition ended"
+            );
+
+
+            isListening =
+                false;
+
+
+            voiceButton.classList.remove(
+                "listening"
+            );
+
+
+            voiceButton.innerHTML =
+                '<span class="voice-icon">🎙</span> Speak Symptoms';
+
+        };
+
+
+    voiceButton.addEventListener(
+        "click",
+        function() {
+
+            if (isListening) {
+
+                return;
+
+            }
+
+
+            try {
+
+                recognition.start();
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Could not start recognition:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   INITIAL STATE
+===================================================== */
+
+resetFlow();
+
+</script>
+
+
+</body>
+
+</html>
